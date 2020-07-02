@@ -41,8 +41,8 @@
                 representation: "display",
                 routeattributes: "waypoints,shape",
                 maneuverattributes: "direction,action",
-                waypoint0: "15.399868166666666,73.81378916666667",
-                waypoint1: "15.370534,73.927639"
+                waypoint0: "15.356882,73.928240",
+                waypoint1: "15.419048,73.903963"
 
             },
             result => {
@@ -95,8 +95,8 @@
                             }
                             else if (junctionCleared) {
                                 console.log("fence = false")
-                                fence = false
-                              junctionCleared
+                                fence = null
+                              junctionCleared = false
                             }
                         },
                         err => {
