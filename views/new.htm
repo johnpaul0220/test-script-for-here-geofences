@@ -67,6 +67,8 @@
                             'key_attributes': ['NAME']
                         },
                         result => {
+                                                console.log("got result")
+
                             if (result.geometries.length > 0) {
 
                                 if (fence == result.geometries[0].attributes.NAME) {
