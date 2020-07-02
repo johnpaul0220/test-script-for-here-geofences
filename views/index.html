@@ -65,23 +65,30 @@
           center: { lng: 73.81568, lat: 15.39585 }
         }
       );
-        var router = platform.getRoutingService(),
+      var router = platform.getRoutingService();
 
-        router.calculateRoute(routeRequestParams = {
-            mode: "fastest;car",
-            representation: "display",
-            routeattributes: "waypoints,shape",
-            maneuverattributes: "direction,action",
-            waypoint0: "15.399868166666666,73.81378916666667",
-            waypoint1: "15.47960376739502,173.85205841064453"
-          },
-           (result)={
-           console.log(result);
-          },
-          (err)=>{
-                  alert("Can't reach the remote server");
-
-        });
+      router.calculateRoute(
+        (routeRequestParams = {
+          mode: "fastest;car",
+          representation: "display",
+          routeattributes: "waypoints,shape",
+          maneuverattributes: "direction,action",
+          waypoint0: "15.399868166666666,73.81378916666667",
+          waypoint1: "15.47960376739502,73.85205841064453"
+        }),
+         result => {
+          console.log(result);
+          array = result.response.route[0].shape;
+          console.log(array);
+          let index = 0;
+          setInterval(array => {
+            
+          },1000);
+        },
+        err => {
+          alert("Can't reach the remote server");
+        }
+      );
     </script>
   </body>
 </html>
