@@ -34,8 +34,6 @@
 
         const geofencing = platform.getGeofencingService();
         let router = platform.getRoutingService();
-        let fence = null
-        let junctionCleared = false
         router.calculateRoute(
             {
                 mode: "fastest;car",
@@ -50,6 +48,8 @@
                 let array = [];
                 array = result.response.route[0].shape;
                 console.log(array.length);
+                let fence = null
+                let junctionCleared = false
                 array.forEach(value => {
                     let temp = value;
                     let tempLatLng = temp.split(",")
@@ -67,7 +67,7 @@
                         result => {
                             if (result.geometries.length > 0) {
 
-                                if (result.geometries[0].attributes.NAME == fence) {
+                                if (fence == result.geometries[0].attributes.NAME) {
                                     // note : do nothing youre in the same fence
                                    //
                                 }
@@ -90,6 +90,7 @@
                                 }
                             }
                             else if (junctionCleared) {
+                                console.log("fence = false")
                                 fence = false
                             }
                         },
