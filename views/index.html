@@ -3,21 +3,86 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="A cool thing made with Glitch">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A cool thing made with Glitch" />
 
     <title>Welcome to Glitch!</title>
 
-    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <link
+      id="favicon"
+      rel="icon"
+      href="https://glitch.com/edit/favicon-app.ico"
+      type="image/x-icon"
+    />
     <!-- import the webpage's stylesheet -->
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/style.css" />
 
     <!-- import the webpage's client-side javascript file -->
     <script src="/script.js" defer></script>
   </head>
   <body>
-   
+    <div id="map" style="width: 640px; height: 480px"></div>
+
+    <script
+      src="https://js.api.here.com/v3/3.1/mapsjs-core.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <script
+      src="https://js.api.here.com/v3/3.1/mapsjs-core-legacy.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <script
+      src="https://js.api.here.com/v3/3.1/mapsjs-service.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <script
+      src="https://js.api.here.com/v3/3.1/mapsjs-service-legacy.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <script
+      src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <script>
+      const platform = new H.service.Platform({
+        apikey: "uD6iDXLk6zPGnHxXg1t-XiieVFHvac2CWGixV8RdJdE"
+      });
+      var maptypes = platform.createDefaultLayers();
+
+      let map = new H.Map(
+        document.getElementById("map"),
+        maptypes.vector.normal.map,
+        {
+          zoom: 15,
+          center: { lng: 73.81568, lat: 15.39585 }
+        }
+      );
+      function getRoute() {
+        var router = platform.getRoutingService(),
+          routeRequestParams = {
+            mode: "fastest;car",
+            representation: "display",
+            routeattributes: "waypoints,shape",
+            maneuverattributes: "direction,action",
+            waypoint0: "15.399868166666666,73.81378916666667",
+            waypoint1: "15.47960376739502,173.85205841064453"
+          };
+        router.calculateRoute(routeRequestParams, onSuccess, onError);
+      }
+      function onSucess(result) {
+        console.log(result);
+        var route = result.response.route[0];
+      }
+      function onError(error) {
+        alert("Can't reach the remote server");
+      }
+    </script>
   </body>
 </html>
