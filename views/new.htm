@@ -40,11 +40,38 @@
                 console.log(array.length);
                 array.forEach(value=>{
                     geofencing.request(H.service.extension.geofencing.Service.EntryPoint.SEARCH_PROXIMITY,
+                    {
+                        "apikey": 'uD6iDXLk6zPGnHxXg1t-XiieVFHvac2CWGixV8RdJdE',
+                        'layer_ids': ["TRAFFIC_LIGHT_FENCES"],
+                        'proximity': value,
+                        'key_attributes': ['NAME']
+                    },
                     result=>{
+                        if (result.geometries.length > 0) {
 
+                            if (fence == result.geometries[0].attributes.NAME) {
+                                // note : do nothing youre in the same fence
+                            }
+                            else if (fence == null) {
+                                //entered a new fence
+                                console.log(result.geometries[0].attributes.NAME)
+                                console.log(`send start message at ${value}`)
+                                //+12024107229
+                                fence = result.geometries[0].attributes.NAME
+                            }
+                            else if (fence != result.geometries[0].attributes.NAME && fence != null) {
+                                console.log(`send end message at ${value}`)
+                                //sendMessage(`+91${tempObj[2]}`,tempObj[1])
+                                fence = result.geometries[0].attributes.NAME
+                                junctionCleared = true
+                            }
+                        }
+                        else if(junctionCleared){
+                            fence = false
+                        }
                     },
                     err=>{
-                        
+                        console.log(err)
                     })
                 })
 
