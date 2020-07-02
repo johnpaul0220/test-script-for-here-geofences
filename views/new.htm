@@ -67,7 +67,7 @@
                             'key_attributes': ['NAME']
                         },
                         result => {
-                                                console.log("got result")
+                            console.log("got result")
 
                             if (result.geometries.length > 0) {
 
@@ -96,6 +96,7 @@
                             else if (junctionCleared) {
                                 console.log("fence = false")
                                 fence = false
+                              junctionCleared
                             }
                         },
                         err => {
@@ -104,7 +105,7 @@
                 })
 
             },
-            err => { })
+            err => { console.error(err)})
     </script>
 
 </body>
