@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="map" style="width: 640px; height: 480px"></div>
+
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core-legacy.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service-legacy.js" type="text/javascript"
+        charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        const platform  = new H.service.Platform({
+            apikey: "IkU57xoI9YzZngVm137ZoxrhNh5H98EYVPxZhfAbvkU"
+        })
+        const geofencing = platform.getGeofencingService();
+        let router = platform.getRoutingService();
+        let fence = null
+        let junctionCleared = false
+        router.calculateRoute(
+            {
+                mode: "fastest;car",
+                representation: "display",
+                routeattributes: "waypoints,shape",
+                maneuverattributes: "direction,action",
+                waypoint0: "15.399868166666666,73.81378916666667",
+                waypoint1: "15.47960376739502,73.85205841064453"
+            },
+            result=>{
+                console.log(result);
+                let array = [];
+                array = result.response.route[0].shape;
+                console.log(array.length);
+                array.forEach(value=>{
+                    geofencing.request(H.service.extension.geofencing.Service.EntryPoint.SEARCH_PROXIMITY,
+                    result=>{
+
+                    },
+                    err=>{
+                        
+                    })
+                })
+
+            },
+            err=>{})
+    </script>
+
+</body>
+
+</html>
