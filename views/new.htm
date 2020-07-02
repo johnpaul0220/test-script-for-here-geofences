@@ -31,18 +31,7 @@
                 center: { lng: 73.907953, lat: 15.402455 }
             }
         );
-        let circle = new H.map.circle(
-            {lat:28.6071, lng:77.2127},
-            10,
-            {
-                style: {
-                  strokeColor: 'rgba(55, 85, 170, 0.6)', // Color of the perimeter
-                  lineWidth: 3 ,
-                  fillColor: 'rgba(0, 128, 0, 0.7)'  // Color of the circle
-                }
-              }
-        )
-        map.addObject(circle)
+
 
         const geofencing = platform.getGeofencingService();
         let router = platform.getRoutingService();
@@ -53,7 +42,8 @@
                 routeattributes: "waypoints,shape",
                 maneuverattributes: "direction,action",
                 waypoint0: "15.399868166666666,73.81378916666667",
-                waypoint1: "15.47960376739502,73.85205841064453"
+                waypoint1: "15.370534,73.927639"
+
             },
             result => {
                 console.log(result);
