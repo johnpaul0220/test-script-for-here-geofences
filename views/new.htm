@@ -67,8 +67,9 @@
                         result => {
                             if (result.geometries.length > 0) {
 
-                                if (fence == result.geometries[0].attributes.NAME) {
+                                if (result.geometries[0].attributes.NAME == fence) {
                                     // note : do nothing youre in the same fence
+                                   //
                                 }
                                 else if (fence == null) {
                                     let startMarker = new H.map.Marker(latlng);
