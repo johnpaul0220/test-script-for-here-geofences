@@ -76,14 +76,17 @@
           waypoint0: "15.399868166666666,73.81378916666667",
           waypoint1: "15.47960376739502,73.85205841064453"
         }),
-         result => {
+        result => {
           console.log(result);
+          let array = [];
           array = result.response.route[0].shape;
-          console.log(array);
-          let index = 0;
+          console.log(array.length);
+          console.log(array.values);
+          let index = -1;
           setInterval(array => {
-            
-          },1000);
+            index = index + 1;
+            //console.log(array.1);
+          }, 1000);
         },
         err => {
           alert("Can't reach the remote server");
