@@ -69,7 +69,7 @@
                   var fence = null
                   var junctionCleared = false
                   router.calculateRoute(
-                    (routeRequestParams = {
+                     routeRequestParams = {
                       mode: "fastest;car",
                       representation: "display",
                       routeattributes: "waypoints,shape",
@@ -83,7 +83,7 @@
                       array = result.response.route[0].shape;
                       console.log(array.length);
                       array.forEach((value)=>{
-            =           geofencing.request(
+                      geofencing.request(
                         H.service.extension.geofencing.Service.EntryPoint.SEARCH_PROXIMITY,
                         {
                             "apikey": 'uD6iDXLk6zPGnHxXg1t-XiieVFHvac2CWGixV8RdJdE',
@@ -99,9 +99,10 @@
                                         }
                                         else if (fence == null) {
                                             //entered a new fence
+                                          console.log(result.geometries[0].attributes.NAME)
                                             console.log("send message")
                                             //+12024107229
-      #                                      fence = result.geometries[0].attributes.NAME
+                                           fence = result.geometries[0].attributes.NAME
                                         }
                                         else if (fence != result.geometries[0].attributes.NAME && fence != null) {
                                             console.log("send end message")
