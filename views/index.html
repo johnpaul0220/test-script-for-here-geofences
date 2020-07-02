@@ -51,47 +51,85 @@
       charset="utf-8"
     ></script>
     <script>
-      const platform = new H.service.Platform({
-        apikey: "IkU57xoI9YzZngVm137ZoxrhNh5H98EYVPxZhfAbvkU"
-      });
+                  const platform = new H.service.Platform({
+                    apikey: "IkU57xoI9YzZngVm137ZoxrhNh5H98EYVPxZhfAbvkU"
+                  });
 
-      var maptypes = platform.createDefaultLayers();
+                  var maptypes = platform.createDefaultLayers();
 
-      let map = new H.Map(
-        document.getElementById("map"),
-        maptypes.vector.normal.map,
-        {
-          zoom: 15,
-          center: { lng: 73.81568, lat: 15.39585 }
-        }
-      );
-      var router = platform.getRoutingService();
-
-      router.calculateRoute(
-        (routeRequestParams = {
-          mode: "fastest;car",
-          representation: "display",
-          routeattributes: "waypoints,shape",
-          maneuverattributes: "direction,action",
-          waypoint0: "15.399868166666666,73.81378916666667",
-          waypoint1: "15.47960376739502,73.85205841064453"
-        }),
-        result => {
-          console.log(result);
-          let array = [];
-          array = result.response.route[0].shape;
-          console.log(array.length);
-          console.log(array.values);
-          let index = -1;
-          setInterval(array => {
-            index = index + 1;
-            //console.log(array.1);
-          }, 1000);
-        },
-        err => {
-          alert("Can't reach the remote server");
-        }
-      );
+                  let map = new H.Map(
+                    document.getElementById("map"),
+                    maptypes.vector.normal.map,
+                    {
+                      zoom: 15,
+                      center: { lng: 73.81568, lat: 15.39585 }
+                    }
+                  );
+                  var router = platform.getRoutingService();
+                  var fence = null
+                  var junctionCleared = false
+                  router.calculateRoute(
+                    (routeRequestParams = {
+                      mode: "fastest;car",
+                      representation: "display",
+                      routeattributes: "waypoints,shape",
+                      maneuverattributes: "direction,action",
+                      waypoint0: "15.399868166666666,73.81378916666667",
+                      waypoint1: "15.47960376739502,73.85205841064453"
+                    }),
+                    result => {
+                      console.log(result);
+                      let array = [];
+                      array = result.response.route[0].shape;
+                      console.log(array.length);
+                      array.forEach((value)=>{
+            =           geofencing.request(
+                        H.service.extension.geofencing.Service.EntryPoint.SEARCH_PROXIMITY,
+                        {
+                            "apikey": 'uD6iDXLk6zPGnHxXg1t-XiieVFHvac2CWGixV8RdJdE',
+                            'layer_ids': layerId,
+                            'proximity': value,
+                            'key_attributes': ['NAME']
+                        },
+                        result => {
+                          //console.log(result)
+                          if (result.geometries.length > 0) {
+                                        if (fence == result.geometries[0].attributes.NAME) {
+                                            // note : do nothing youre in the same fence
+                                        }
+                                        else if (fence == null) {
+                                            //entered a new fence
+                                            console.log("send message")
+                                            //+12024107229
+      #                                      fence = result.geometries[0].attributes.NAME
+                                        }
+                                        else if (fence != result.geometries[0].attributes.NAME && fence != null) {
+                                            console.log("send end message")
+                                            sendMessage(`+91${tempObj[2]}`,tempObj[1])
+                                                fence = result.geometries[0].attributes.NAME
+                                            var junctionCleared = true
+                                        }
+                                    }
+                                    else if(junctionCleared){
+                                        fence = false
+                                    }
+                        },
+                        error => {
+                            reject(error)
+                        }
+                    )
+                        }
+                    )          })
+                      let index = -1;
+                      setInterval(array => {
+                        index = index + 1;
+                        //console.log(array.1);
+                      }, 1000);
+                    },
+                    err => {
+                      alert("Can't reach the remote server");
+                    }
+                  );
     </script>
   </body>
 </html>
