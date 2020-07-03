@@ -68,8 +68,7 @@
                             lat: tempLatLng[0],
                             lng: tempLatLng[1]
                         }
-                        
-                        geofencing.request(H.service.extension.geofencing.Service.EntryPoint.SEARCH_PROXIMITY,
+                            geofencing.request(H.service.extension.geofencing.Service.EntryPoint.SEARCH_PROXIMITY,
                             {
                                 "apikey": 'uD6iDXLk6zPGnHxXg1t-XiieVFHvac2CWGixV8RdJdE',
                                 'layer_ids': ["TRAFFIC_LIGHT_FENCES"],
@@ -101,7 +100,7 @@
                                         console.log('fence changed')
                                         let endMarker = new H.map.Marker(latlng);
                                         map.addObject(endMarker);
-                                        
+                                        console.log(result.geometries[0].attributes.NAME)
                                         console.log(`send end message at ${value}`)
                                         //sendMessage(`+91${tempObj[2]}`,tempObj[1])
                                         fence = result.geometries[0].attributes.NAME
@@ -117,6 +116,7 @@
                             err => {
                                 console.log(err)
                             })
+                        
                     })
 
                 },
