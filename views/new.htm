@@ -42,10 +42,10 @@
         const geofencing = platform.getGeofencingService();
         let router = platform.getRoutingService();
         $('#submit').on('click', async () => {
-             let start =  $('#start').val()
+            let start =  $('#start').val()
             let end = $('#end').val()
-            console.log(start)
-            console.log(end)
+            console.log(start.replace(/\s/g, ""))
+            console.log(end.replace(/\s/g, ""))
              router.calculateRoute(
                 {
                     mode: "fastest;car",
@@ -90,6 +90,7 @@
                                         let startMarker = new H.map.Marker(latlng);
                                         map.addObject(startMarker);
                                         //entered a new fence
+                                        console.log('entered a new fence')
                                         console.log(result.geometries[0].attributes.NAME)
                                         console.log(`send start message at ${value}`)
                                         //+12024107229
@@ -98,6 +99,7 @@
 
                                     }
                                     else if (fence != result.geometries[0].attributes.NAME && fence != null) {
+                                        console.log('fence changed')
                                         let endMarker = new H.map.Marker(latlng);
                                         map.addObject(endMarker);
                                         
@@ -108,7 +110,7 @@
                                     }
                                 }
                                 else if (junctionCleared) {
-                                    console.log("fence = false")
+                                    console.log("fence = null")
                                     fence = null
                                     junctionCleared = false
                                 }
