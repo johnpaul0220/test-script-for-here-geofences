@@ -26,6 +26,7 @@
     const geofencing = platform.getGeofencingService();
     let fence = null
     let junctionCleared = false
+    var p = document.createElement("P");
 
     function onPositionUpdate(position)
         {
@@ -42,8 +43,6 @@
                     'key_attributes': ['NAME']
                 },
                 result => {
-
-
                     if (result.geometries.length > 0) {
                     //$('p').append(result.geometries[0].attributes.NAME)
 
@@ -52,8 +51,8 @@
                             console.log('same fence')
                         }
                         else if (fence == null && result.geometries.length > 0) {
-                            let startMarker = new H.map.Marker(latlng);
-                            map.addObject(startMarker);
+                            //let startMarker = new H.map.Marker(latlng);
+                            //map.addObject(startMarker);
                             //entered a new fence
                             console.log('entered a new fence')
                             console.log(result.geometries[0].attributes.NAME)
@@ -83,7 +82,7 @@
                     }
                     else if (junctionCleared) {
                         console.log("fence = null")
-                        $('p').append('fence = null')
+                        $()
                         fence = null
                         junctionCleared = false
                     }
