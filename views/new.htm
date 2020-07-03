@@ -9,7 +9,9 @@
 
 <body>
     <div id="map" style="width: 640px; height: 480px"></div>
-
+    <input type="text" name="start" id="start">
+    <input type="text" name="end" id="end">
+    <input type="button" value="submit" id="submit">
     <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-core-legacy.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
@@ -32,80 +34,86 @@
             }
         );
 
-
         const geofencing = platform.getGeofencingService();
         let router = platform.getRoutingService();
-        router.calculateRoute(
-            {
-                mode: "fastest;car",
-                representation: "display",
-                routeattributes: "waypoints,shape",
-                maneuverattributes: "direction,action",
-                waypoint0: "15.356882,73.928240",
-                waypoint1: "15.419048,73.903963"
+        $('#submit').on('click', () => {
+            let start = $('#start').text()
+            let end = $('end').text()
+            router.calculateRoute(
+                {
+                    mode: "fastest;car",
+                    representation: "display",
+                    routeattributes: "waypoints,shape",
+                    maneuverattributes: "direction,action",
+                    waypoint0: start,
+                    waypoint1: end
 
-            },
-            result => {
-                console.log(result);
-                let array = [];
-                array = result.response.route[0].shape;
-                console.log(array.length);
-                let fence = null
-                let junctionCleared = false
-                array.forEach(value => {
-                    let temp = value;
-                    let tempLatLng = temp.split(",")
-                    let latlng = {
-                        lat: tempLatLng[0],
-                        lng: tempLatLng[1]
-                    }
-                    geofencing.request(H.service.extension.geofencing.Service.EntryPoint.SEARCH_PROXIMITY,
-                        {
-                            "apikey": 'uD6iDXLk6zPGnHxXg1t-XiieVFHvac2CWGixV8RdJdE',
-                            'layer_ids': ["TRAFFIC_LIGHT_FENCES"],
-                            'proximity': value,
-                            'key_attributes': ['NAME']
-                        },
-                        result => {
-                            console.log("got result")
+                },
+                result => {
+                    console.log(result);
+                    let array = [];
+                    array = result.response.route[0].shape;
+                    console.log(array.length);
+                    let fence = null
+                    let junctionCleared = false
+                    array.forEach(value => {
+                        let temp = value;
+                        let tempLatLng = temp.split(",")
+                        let latlng = {
+                            lat: tempLatLng[0],
+                            lng: tempLatLng[1]
+                        }
+                        geofencing.request(H.service.extension.geofencing.Service.EntryPoint.SEARCH_PROXIMITY,
+                            {
+                                "apikey": 'uD6iDXLk6zPGnHxXg1t-XiieVFHvac2CWGixV8RdJdE',
+                                'layer_ids': ["TRAFFIC_LIGHT_FENCES"],
+                                'proximity': value,
+                                'key_attributes': ['NAME']
+                            },
+                            result => {
+                                console.log("got result")
 
-                            if (result.geometries.length > 0) {
+                                if (result.geometries.length > 0) {
 
-                                if (fence == result.geometries[0].attributes.NAME) {
-                                    // note : do nothing youre in the same fence
-                                   //
+                                    if (fence == result.geometries[0].attributes.NAME) {
+                                        // note : do nothing youre in the same fence
+                                    }
+                                    else if (fence == null) {
+                                        let startMarker = new H.map.Marker(latlng);
+                                        map.addObject(startMarker);
+                                        //entered a new fence
+                                        console.log(result.geometries[0].attributes.NAME)
+                                        console.log(`send start message at ${value}`)
+                                        //+12024107229
+                                        fence = result.geometries[0].attributes.NAME
+                                        junctionCleared = false
+
+                                    }
+                                    else if (fence != result.geometries[0].attributes.NAME && fence != null) {
+                                        let endMarker = new H.map.Marker(latlng);
+                                        map.addObject(endMarker);
+                                        console.log(`send end message at ${value}`)
+                                        //sendMessage(`+91${tempObj[2]}`,tempObj[1])
+                                        fence = result.geometries[0].attributes.NAME
+                                        junctionCleared = true
+                                    }
                                 }
-                                else if (fence == null) {
-                                    let startMarker = new H.map.Marker(latlng);
-                                    map.addObject(startMarker);
-                                    //entered a new fence
-                                    console.log(result.geometries[0].attributes.NAME)
-                                    console.log(`send start message at ${value}`)
-                                    //+12024107229
-                                    fence = result.geometries[0].attributes.NAME
+                                else if (junctionCleared) {
+                                    console.log("fence = false")
+                                    fence = null
+                                    junctionCleared = false
                                 }
-                                else if (fence != result.geometries[0].attributes.NAME && fence != null) {
-                                    let startMarker = new H.map.Marker(latlng);
-                                    map.addObject(startMarker);
-                                    console.log(`send end message at ${value}`)
-                                    //sendMessage(`+91${tempObj[2]}`,tempObj[1])
-                                    fence = result.geometries[0].attributes.NAME
-                                    junctionCleared = true
-                                }
-                            }
-                            else if (junctionCleared) {
-                                console.log("fence = false")
-                                fence = null
-                                junctionCleared = false
-                            }
-                        },
-                        err => {
-                            console.log(err)
-                        })
-                })
+                            },
+                            err => {
+                                console.log(err)
+                            })
+                    })
 
-            },
-            err => { console.error(err)})
+                },
+                err => { console.error(err) })
+
+        })
+
     </script>
 
 </body>
