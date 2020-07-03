@@ -42,19 +42,16 @@
         const geofencing = platform.getGeofencingService();
         let router = platform.getRoutingService();
         $('#submit').on('click', async () => {
-            let start =  $('#start').val()
-            let end = $('#end').val()
-            let newStart = start.split(/\s/).join('');
-            let newEnd = end.split(/\s/).join('');
-
+            let start =  $('#start').val().split(/\s/).join('');
+            let end = $('#end').val().split(/\s/).join('');
              router.calculateRoute(
                 {
                     mode: "fastest;car",
                     representation: "display",
                     routeattributes: "waypoints,shape",
                     maneuverattributes: "direction,action",
-                    waypoint0: newStart,
-                    waypoint1: newEnd
+                    waypoint0: start,
+                    waypoint1: end
 
                 },
                 result => {
@@ -71,6 +68,7 @@
                             lat: tempLatLng[0],
                             lng: tempLatLng[1]
                         }
+                        
                         geofencing.request(H.service.extension.geofencing.Service.EntryPoint.SEARCH_PROXIMITY,
                             {
                                 "apikey": 'uD6iDXLk6zPGnHxXg1t-XiieVFHvac2CWGixV8RdJdE',
